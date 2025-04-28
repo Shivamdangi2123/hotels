@@ -71,6 +71,21 @@ res.status(200).json(response);
     res.status(500).json({ error: 'internal server mistake' });
 
 }
-})
+});
+router.delete('/:id',async(req,res)=>{
+try {
+    const pid =req.params.id;
+    const deletepid = await Person.findByIdAndDelete(id);
+    if (!deletepid){
+      return res.status(404).json({error: "this is invalid id"});
+    }
+    console.log('data delete succesful');
+    res.status(202).json({message:'person was delete'});
+ 
+} catch (err) {
+console.log(err);
+res.status(500).json({error:"internal server error"});
+}})
+ 
 
 module.exports = router;

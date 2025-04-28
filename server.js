@@ -27,8 +27,8 @@ app.get("/", function (req, res) {
 
 
 
-// port 
+// port is define 
 
 app.listen(3000, () => {
-  console.log("server are running");
+  console.log("server are running")  ;
 }); 
