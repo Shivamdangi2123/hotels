@@ -2,9 +2,11 @@
 const express = require('express');
 const app = express();
 const db = require('./db');
+const passport = reequire('./auth');
 require('dotenv').config();
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+
+
+app.use(passport.initialize());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -13,42 +15,25 @@ const Person = require('./models/Person');
 const MenuItem = require('./models/MenuItem');
 const Rooms = require('./models/Rooms');
 
-
+const localAuthmiddleware =passport.authenticate('local', { session: false });
 const personRoutes = require('./routes/personRoutes');
 app.use('/person', personRoutes);
 const menuRoutes = require('./routes/menuRoutes')
 app.use('/menu', menuRoutes);
 const roomsRoutes = require('./routes/roomsRoutes');
-app.use('/Rooms', roomsRoutes);
+app.use('/Rooms', localAuthmiddleware ,roomsRoutes);
 
 
 
-passport.use(new LocalStrategy(async (username, password, done) => {
-  try {
-    const user = await Person.findOne({ username: username });
-    if (!user)
-      return done(null, false, { massage: 'incorrect username' });
 
-    if (user.password == password ? true : false) {
-      return done(null, user)
-    } else {
-      return done(null, false, { massage: 'incorrect password' })
-    }
-
-  } catch (err) {
-    return done(err);
-  }
-}))
-
-app.use(passport.initialize());
 
 // const logreq = (res, req, next) => {
 //   console.log(`${new Date().toLocaleString()} request made to :${req.originalUrl}`);
 //   next();
 
 // }
-const localAuthmiddleware =passport.authenticate('local', { session: false });
-app.use(logreq)
+
+// app.use(logreq)
 app.get("/", localAuthmiddleware , function (req, res) {
   res.send("i an here2323");
 })

@@ -1,5 +1,6 @@
 const { uniqueId } = require('lodash');
 const mongoose = require('mongoose');
+const bcrypt =require ('bcrypt');
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -41,6 +42,27 @@ const personSchema = new mongoose.Schema({
         type:String
     }
 });
+
+personSchema.pre('save',async (next)=>{
+    const person =this;
+    // Agar password update nahi hua ho to hashing skip kar
+    if(!person.isModified('password')) return next (); 
+    try {
+// hash password genration
+        const salt =await bcrypt.salt(10);
+        
+//hash password 
+const hashpassword  =await bcrypt.hash(person.password,salt);
+//override the plain password with the hashed one  
+person.password =hashpassword;
+next();
+
+    } catch (err) {
+        return next(err);
+    }
+})
+
+
 //CREATE  person model
 const Person = mongoose.model('Person', personSchema);
 module.exports = Person; 
