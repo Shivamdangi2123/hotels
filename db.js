@@ -4,8 +4,8 @@ require('dotenv').config();
 // define mongo db connection url complsury h connection ke liye 
 
 
-// const mongourl = process.env.DB_URL_LOCAL;
-const mongourl =process.env.DB_URl;
+ const mongourl = process.env.DB_URL_LOCAL;
+// const mongourl =process.env.DB_URl;
 
 
 

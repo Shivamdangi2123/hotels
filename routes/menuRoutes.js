@@ -41,8 +41,43 @@ router.get('/:menucheck',async(req,res)=>{
     console.log(err);
     res.status(500).json({error:'internal server error'})
  }
+});
+router.put('/:id',async(res,req)=>{
+    try {
+ const mid = req.params.id;
+ const data =req.body;
+ const response = await MenuItem.findByIdAndUpdate(mid,data,{
+    new:true,
+    runvalidators:true
+ }) ;
+ if(!response){
+    return res.status(404).json({error:"internal error"});
+ }
+ 
+ console.log('menu data update');
+ res.status(202).json(response)
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({error:"internal server error"})
+        
+    }
 })
 
-
+router.delete('/:id',async(req,res)=>{
+    const mid = req.params.id;
+  
+   try {
+    const response = await MenuItem.findByIdAndDelete(mid);
+    if (!response){
+        return res.status(404).json({error:"inveled menu "});
+    }
+    console.log("deleted");
+    res.status(202).json({message:"delete a menu item"});
+   } catch (err) {
+    console.log(err);
+    res.status(500).json({error:"internal server error"})
+   }
+})
 
 module.exports = router;
